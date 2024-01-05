@@ -20,8 +20,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="verticies.h">
-      <Filter>Headerdateien</Filter>
+    <None Include="test_vs.glsl">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+    <None Include="test_fs.glsl">
+      <Filter>Ressourcendateien</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="shaders.h">
+      <Filter>Ressourcendateien</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
