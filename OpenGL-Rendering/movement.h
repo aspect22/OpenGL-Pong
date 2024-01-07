@@ -1,6 +1,6 @@
 #pragma once
 #include <windows.h>
-float points[];
-float points2[];
+float player1[];
+float player2[];
 DWORD WINAPI p1Movement(void* data);
 DWORD WINAPI p2Movement(void* data);
