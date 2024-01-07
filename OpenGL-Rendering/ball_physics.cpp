@@ -1,95 +1,74 @@
 #include "ball.h"
+bool up = true;
+bool right = true;
+float velocity = 0.01f;
 
 DWORD WINAPI ballMovement(void* data)
 {
-	bool up = false;
-	bool right = true;
 	Sleep(3000);
 	while (true)
 	{
-		// Check if ball is at the top of the screen
-		if (ball[1] <= 0.0f)
+		if(right){
+			// Ball is moving right by velocity speed
+			// Ball Cords = [0] = x, [1] = y, [2] = z
+			ball[0] += velocity;  // Update the y-coordinate of the top left point
+			ball[3] += velocity;  // Update the y-coordinate of the top right point
+			ball[6] += velocity;  // Update the y-coordinate of the bottom right point
+			ball[9] += velocity; // Update the y-coordinate of the bottom left point
+		}
+		else {
+			// Ball is moving left by velocity speed
+			ball[0] -= velocity;  // Update the y-coordinate of the top left point
+			ball[3] -= velocity;  // Update the y-coordinate of the top right point
+			ball[6] -= velocity;  // Update the y-coordinate of the bottom right point
+			ball[9] -= velocity; // Update the y-coordinate of the bottom left point
+		}
+		if(up)
 		{
-			up = false;
-			Sleep(20);
+			// Ball is moving up by velocity speed
+			ball[1] += velocity;  // Update the y-coordinate of the top left point
+			ball[4] += velocity;  // Update the y-coordinate of the top right point
+			ball[7] += velocity;  // Update the y-coordinate of the bottom right point
+			ball[10] += velocity; // Update the y-coordinate of the bottom left point
+		}
+		else {
+			// Ball is moving down by velocity speed
+			ball[1] -= velocity;  // Update the y-coordinate of the top left point
+			ball[4] -= velocity;  // Update the y-coordinate of the top right point
+			ball[7] -= velocity;  // Update the y-coordinate of the bottom right point
+			ball[10] -= velocity; // Update the y-coordinate of the bottom left point
 		}
 
-		// Check if ball is at the bottom of the screen
-		if (ball[10] >= 0.95f)
-		{
-			up = true;
-			Sleep(20);
-		}
 
-		// Collision detection
-		/* This is the old collision detection code used in SFML
-		if (ball.getGlobalBounds().intersects(line.getGlobalBounds()))
+		// Collision detection with player 1 
+		//if (ball[1] <=player1[4] && ball[10] >=player1[7] && ball[1] >= player1[3])
+		if (ball[10] >= player1[7] && ball[1] <= player1[4] && ball[0] <= player1[3])
 		{
 			right = true;
-			ball.setPosition(ball.getPosition().x + velocity, ball.getPosition().y);
-			velocity += random() % 2;
-			movement += 1;
-		}
-
-		if (ball.getGlobalBounds().intersects(line2.getGlobalBounds()))
-		{
-			right = false;
-			ball.setPosition(ball.getPosition().x - velocity, ball.getPosition().y);
-			velocity += random() % -2;
-			movement += 1;
-		}
-		*/
-		// Collision detection with player 1
-		if (ball[1] <= player1[7] && ball[1] >= player1[10])
-		{
-			right = true;
-			Sleep(20);
-		}
-		if (ball[4] <= player1[7] && ball[4] >= player1[10])
-		{
-			right = true;
-			Sleep(20);
+			velocity += 0.001f;
 		}
 
 		// Collision detection with player 2
-		if (ball[1] <= player2[7] && ball[1] >= player2[10])
+		if (ball[4] <= player2[1] && ball[7] >= player2[10] && ball[3] >= player2[0])
+			//if (ball[1] <= player2[3] && ball[3] >= player2[1] && ball[0] >= player2[2] && ball[2] <= player2[0])
 		{
 			right = false;
-			Sleep(20);
-		}
-		if (ball[4] <= player2[7] && ball[4] >= player2[10])
-		{
-			right = false;
-			Sleep(20);
+			velocity += 0.001f;
 		}
 
-		switch (right)
+		// Check if ball is at the top of the screen
+		if (ball[4] >= 1.00f)
 		{
-		case true:
-			// Ball is moving right by velocity speed
-			ball[1] += 0.05f;  // Update the y-coordinate of the top left point
-			ball[4] += 0.05f;  // Update the y-coordinate of the top right point
-			ball[7] += 0.05f;  // Update the y-coordinate of the bottom right point
-			ball[10] += 0.05f; // Update the y-coordinate of the bottom left point
-			break;
-		case false:
-			// Ball is moving left by velocity speed
-			ball[1] -= 0.05f;  // Update the y-coordinate of the top left point
-			ball[4] -= 0.05f;  // Update the y-coordinate of the top right point
-			ball[7] -= 0.05f;  // Update the y-coordinate of the bottom right point
-			ball[10] -= 0.05f; // Update the y-coordinate of the bottom left point
-			break;
+			up = false;
 		}
-		switch (up)
+
+		// Check if ball is at the bottom of the screen
+		if (ball[7] <= -1.00f)
 		{
-		case true:
-			// Ball is moving up by velocity speed
-			break;
-		case false:
-			// Ball is moving down by velocity speed
-			break;
+			up = true;
 		}
-		Sleep(10);
+
+		Sleep(20);
 
 	}
 	return 0;

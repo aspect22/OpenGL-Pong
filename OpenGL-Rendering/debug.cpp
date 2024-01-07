@@ -29,6 +29,9 @@ DWORD WINAPI debug(void* data) {
             printf("Ball Top Right: %f\n", ball[4]);
             printf("Ball Bottom Right: %f\n", ball[7]);
             printf("Ball Bottom Left: %f\n", ball[10]);
+            //Print ball up down boolean
+            //printf("Ball Up: %d\n", up);
+            //printf("Ball Right: %d\n", right);
             Sleep(200);
             // Clear Console
             system("cls");

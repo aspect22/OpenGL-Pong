@@ -1,24 +1,32 @@
-﻿#include <GL/glew.h>
+﻿// Glew
+#include <GL/glew.h>
+
+// GLFW
 #include <GLFW/glfw3.h>
+
+// Standard
 #include <stdio.h>
 #include <windows.h>
+
+// Local
 #include "shaders.h"
 #include "movement.h"
 #include "ball.h"
 #include "debug.h"
+#include "handler.h"
 
 GLuint shader_programme;
 GLuint shader_programme_pink;
 GLuint shader_programme_white;
 GLuint vao;
 bool debugtoggle = false;
-
+extern float velocity;
 // Items to draw
 float player1[] = {
     // x     y     z
-    // x cordinate is how far left or right
-    // y cordinate is how far up or down
-    // z cordinate is how far forward or back
+    // X value is how far left or right
+    // Y value is how far up or down
+    // Z value is how far forward or back
    -0.95f,  0.25f,  0.0f, // top left
    -0.90f,  0.25f,  0.0f, // top right
    -0.90f, -0.25f,  0.0f, // bottom right
@@ -26,23 +34,19 @@ float player1[] = {
 };
 
 float player2[] = {
-    // x     y     z
-    // x cordinate is how far left or right
-    // y cordinate is how far up or down
-    // z cordinate is how far forward or back
-    0.95f,  0.25f,  0.0f, // top left
-    0.90f,  0.25f,  0.0f, // top right
-    0.90f, -0.25f,  0.0f, // bottom right
-    0.95f, -0.25f,  0.0f  // bottom left
+    0.90f,  0.25f,  0.0f, // top left uncomment
+    0.95f,  0.25f,  0.0f, // top right
+    0.95f, -0.25f,  0.0f, // bottom right
+    0.90f, -0.25f,  0.0f // bottom left
 };
 
 float ball[] = {
-    -0.05f,  0.10f,  0.0f, // top left
-    0.05f,  0.10f,  0.0f, // top right
-    0.05f, -0.10f,  0.0f, // bottom right
-    -0.05f, -0.10f,  0.0f  // bottom left
+    // x     y     z
+    -0.03f,  0.0f,  0.0f, // top left
+    0.0f,  0.0f,   0.0f,  // top right
+    0.0f, -0.05f,   0.0f, // bottom right
+    -0.03f, -0.05f,  0.0f // bottom left
 };
-
 
 // TODO: Move this into a seperate file
 void compile_Shaders()
@@ -102,8 +106,8 @@ void compile_Shaders()
 }
 
 int main() {
-
     // start GL context and O/S window using the GLFW helper library
+
     if (!glfwInit()) {
         fprintf(stderr, "ERROR: could not start GLFW3\n");
         return 1;
@@ -145,6 +149,16 @@ int main() {
     CreateThread(NULL, 0, p2Movement, NULL, 0, NULL);
     printf("Movement thread created. Player 2\n");
 
+    // Create ball movement thread
+    printf("Ball movement thread starting...\n");
+    CreateThread(NULL, 0, ballMovement, NULL, 0, NULL);
+    printf("Ball movement thread created.\n");
+
+    // Create gamehandler
+    printf("Gamehandler thread starting...\n");
+    CreateThread(NULL, 0, game_Handler, NULL, 0, NULL);
+    printf("Gamehandler thread created.\n");
+
     // debug
     CreateThread(NULL, 0, debug, NULL, 0, NULL);
 
@@ -152,7 +166,6 @@ int main() {
     while (!glfwWindowShouldClose(window)) {
         // wipe the drawing surface clear
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         switch (debugtoggle)
         {
 			case false:
@@ -164,7 +177,6 @@ int main() {
             default:
                 break;
 		}
-
         // Draw player1
         glUseProgram(shader_programme);
         glBindVertexArray(vao);
@@ -183,9 +195,9 @@ int main() {
         glBufferData(GL_ARRAY_BUFFER, sizeof(ball), ball, GL_STATIC_DRAW);
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
+
         // Update other events like input handling 
         glfwPollEvents();
-
         // Put the stuff we've been drawing onto the display
         glfwSwapBuffers(window);
     }

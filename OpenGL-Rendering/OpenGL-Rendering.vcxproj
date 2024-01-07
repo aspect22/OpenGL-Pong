@@ -132,6 +132,7 @@
   <ItemGroup>
     <ClCompile Include="ball_physics.cpp" />
     <ClCompile Include="debug.cpp" />
+    <ClCompile Include="handler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="movement.cpp" />
   </ItemGroup>
@@ -142,6 +143,7 @@
   <ItemGroup>
     <ClInclude Include="ball.h" />
     <ClInclude Include="debug.h" />
+    <ClInclude Include="handler.h" />
     <ClInclude Include="movement.h" />
     <ClInclude Include="shaders.h" />
   </ItemGroup>
